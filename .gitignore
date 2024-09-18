@@ -1,6 +1,15 @@
 # Created by https://www.toptal.com/developers/gitignore/api/java
 # Edit at https://www.toptal.com/developers/gitignore?templates=java
 
+# Игнорировать папки
+.gradle/
+.idea/
+build/
+
+# Игнорировать файлы
+data.txt
+messages.json
+
 ### Java ###
 # Compiled class file
 *.class
