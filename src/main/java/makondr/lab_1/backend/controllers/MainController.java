@@ -10,35 +10,20 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("api/v2")
 public class MainController {
     private static final String path = "data.txt";
-    private int counter = 4;
-    private final List<Map<String, String>> messages = new ArrayList<>() {{
-        add(new HashMap<>() {{
-            put("id", "1");
-            put("message", "First message");
-        }});
-        add(new HashMap<>() {{
-            put("id", "2");
-            put("message", "Second message");
-        }});
-        add(new HashMap<>() {{
-            put("id", "3");
-            put("message", "Third message");
-        }});
-    }};
+    private int counter = 1;
+    private final List<Map<String, String>> messages = new ArrayList<>();
 
     @GetMapping
     public List<Map<String, String>> getMessages() {
+        List<Map<String, String>> messages =  deserialize(readFromFile());
 
-        return deserialize(readFromFile());
+        return Objects.isNull(messages) ? new ArrayList<>() : messages;
     }
 
     @GetMapping("{id}")
@@ -72,7 +57,7 @@ public class MainController {
     private String readFromFile(){
         Path pathToFile = Path.of(path);
         if(Files.notExists(pathToFile)){
-            writeToJson(messages);
+            writeToJson(null);
         }
         try {
             return Files.readString(pathToFile);
