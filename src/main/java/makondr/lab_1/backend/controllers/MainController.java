@@ -20,7 +20,7 @@ import java.util.Map;
 public class MainController {
     private static final String path = "data.txt";
     private int counter = 4;
-    private List<Map<String, String>> messages = new ArrayList<>() {{
+    private final List<Map<String, String>> messages = new ArrayList<>() {{
         add(new HashMap<>() {{
             put("id", "1");
             put("message", "First message");
@@ -70,8 +70,12 @@ public class MainController {
     }
 
     private String readFromFile(){
+        Path pathToFile = Path.of(path);
+        if(Files.notExists(pathToFile)){
+            writeToJson(messages);
+        }
         try {
-            return Files.readString(Path.of(path));
+            return Files.readString(pathToFile);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
