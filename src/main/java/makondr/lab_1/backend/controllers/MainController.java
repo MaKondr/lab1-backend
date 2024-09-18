@@ -1,19 +1,22 @@
 package makondr.lab_1.backend.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import makondr.lab_1.backend.exceptions.NotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("api/v1")
+@RequestMapping("api/v2")
 public class MainController {
     private static final String path = "data.txt";
     private int counter = 4;
@@ -34,7 +37,8 @@ public class MainController {
 
     @GetMapping
     public List<Map<String, String>> getMessages() {
-        return messages;
+
+        return deserialize(readFromFile());
     }
 
     @GetMapping("{id}")
@@ -63,7 +67,24 @@ public class MainController {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
     }
+
+    private String readFromFile(){
+        try {
+            return Files.readString(Path.of(path));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private List<Map<String, String>> deserialize(String fileStr){
+        TypeReference<List<Map<String,String>>> typeRef = new TypeReference<>() {};
+        try {
+              return new ObjectMapper().readValue(fileStr,typeRef);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
 }
