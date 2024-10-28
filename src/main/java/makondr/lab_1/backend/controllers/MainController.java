@@ -25,7 +25,6 @@ public class MainController {
 
         return Objects.isNull(messages) ? new ArrayList<>() : messages;
     }
-
     @GetMapping("{id}")
     public Map<String, String> getMessage(@PathVariable String id) {
         return getMessageById(id);
